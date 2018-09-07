@@ -1,0 +1,6 @@
+
+config JZ_CIM_1
+	bool "Using Jz CIM Controller 1"
+	depends on SOC_JZ4775
+	default n
+

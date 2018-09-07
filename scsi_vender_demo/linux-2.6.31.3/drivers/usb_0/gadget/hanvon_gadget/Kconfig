@@ -1,0 +1,24 @@
+#
+# USB Gadget support on a system involves
+#    (a) a peripheral controller, and
+#    (b) the gadget driver using it.
+#
+# NOTE:  Gadget support ** DOES NOT ** depend on host-side CONFIG_USB !!
+#
+#  - Host systems (like PCs) need CONFIG_USB (with "A" jacks).
+#  - Peripherals (like PDAs) need CONFIG_USB_GADGET (with "B" jacks).
+#  - Some systems have both kinds of controllers.
+#
+# With help from a special transceiver and a "Mini-AB" jack, systems with
+# both kinds of controller can also support "USB On-the-Go" (CONFIG_USB_OTG).
+#
+
+
+config USB_HANVON_SCSI_COMMAND
+	bool "Enable hanvon SCSI vendor command"
+	depends on USB_FILE_STORAGE && (SOC_JZ4740 || SOC_JZ4750 || SOC_JZ4750D || SOC_JZ4760 || SOC_JZ4760B || SOC_JZ4770 || SOC_JZ4780 || SOC_JZ4775)
+	default y
+	help
+	  say "y" to use hanvon SCSI Vendor Command.
+	  say "n" to disable hanvon SCSI Vendor Command.
+

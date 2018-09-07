@@ -1,0 +1,111 @@
+
+#cp or mv the file as Makefile and make
+
+#the main target
+ALL = fha.a
+
+# Pathes and Locations
+ifndef SDKPATH
+SDKPATH    = .
+endif
+
+ifndef BUILDPATH
+BUILDPATH   = build
+endif
+
+MAKE    = make -f makefile_ads
+
+TD   	= `/bin/date +%Y%m%d_%H%M%S`
+
+DEFINE		= -DOS_ANYKA=1
+DEFINE		+= -DARM_ADS=1
+
+DEFINE      += -D$(PLATFORM)=1
+ifdef SUPPORT_NAND
+DEFINE      += -DSUPPORT_NAND=1
+endif
+
+ifdef SUPPORT_SPIFLASH
+DEFINE      += -DSUPPORT_SPIFLASH=1
+endif
+
+ifdef SUPPORT_SD
+DEFINE      += -DSUPPORT_SD=1
+endif
+
+ifdef SPOT_SYS
+DEFINE      += -DSPOT_SYS=1
+endif
+
+INCLUDE = -I. -Iinclude
+
+CFLAGS 	    = -g -O2 -apcs /interwork -cpu 4T -W -Ec $(DEFINE) $(INCLUDE)
+
+# Tools
+CC             = tcc
+AS             = armasm
+RM             = rm -rf
+MKDIR          = mkdir
+AR             = armar
+
+COBJS       = 	$(BUILDPATH)/fha_binburn.o $(BUILDPATH)/fha_dataget.o
+                
+ifdef SUPPORT_NAND
+COBJS       += 	$(BUILDPATH)/nandbinburn.o $(BUILDPATH)/nanddataget.o $(BUILDPATH)/nanddriver.o
+    ifdef SPOT_SYS
+        COBJS       += 	$(BUILDPATH)/asa.o
+    else
+        COBJS       += 	$(BUILDPATH)/fha_asa.o  $(BUILDPATH)/fha_asa_format.o 
+    endif
+endif
+
+ifdef SUPPORT_SD
+COBJS       += 	$(BUILDPATH)/sdburn.o
+endif
+
+ifdef SUPPORT_SPIFLASH
+COBJS       += 	$(BUILDPATH)/spiburn.o 
+endif
+
+theLibFile     = $(ALL)
+
+#build rule
+.PHONY: clean makedirs maketarget debug
+
+debug:
+	$(MAKE) makedirs  BUILDPATH=$(BUILDPATH)/deb
+	$(MAKE) maketarget  BUILDPATH=$(BUILDPATH)/deb
+
+release:
+	$(MAKE) makedirs  BUILDPATH=$(BUILDPATH)/rel
+	$(MAKE) maketarget CFG=Release BUILDPATH=$(BUILDPATH)/rel 
+
+		
+makedirs: $(BUILDPATH) 
+
+maketarget: $(theLibFile)
+
+clean :
+	-@$(RM) $(BUILDPATH)
+	-@$(RM) $(theLibFile)
+
+#tar:
+#	/bin/tar cvfz fatfs_lib_SRC_$(TD).tar.z source include base mmst_api.h wapt_api.h fatfslib.dsp Makefile
+
+$(BUILDPATH):
+	-@$(MKDIR) -p $@
+
+$(theLibFile): $(COBJS)
+	@echo ---------------------[$@]---------------------
+	$(AR) -rsv $(theLibFile) $(COBJS)
+
+vpath %.c source
+ifdef SPOT_SYS
+    vpath %.c spotlight_asa
+endif
+
+#Rules ----------------------------- c -> d
+$(BUILDPATH)/%.o: %.c
+	@echo ---------------------[$<]---------------------
+	$(CC) -c $(CFLAGS)  -o $@ $<
+

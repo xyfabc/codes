@@ -1,0 +1,88 @@
+
+#cp or mv the file as Makefile and make
+
+#the main target
+ALL = fha.a
+
+ifndef BUILDPATH
+BUILDPATH   = build
+endif
+
+MAKE    = make -f makefile_gcc
+
+DEFINE		= -DOS_ANYKA=1
+
+ifdef SUPPORT_NAND
+DEFINE      += -DSUPPORT_NAND=1
+endif
+
+ifdef SUPPORT_SPIFLASH
+DEFINE      += -DSUPPORT_SPIFLASH=1
+endif
+
+ifdef SUPPORT_SD
+DEFINE      += -DSUPPORT_SD=1
+endif
+
+INCLUDE = -I. -Iinclude
+
+CFLAGS 		= -fno-builtin -nostdlib -O2 $(DEFINE) $(INCLUDE)
+
+ifeq ($(CROSS_COMPILE),)
+    CROSS_COMPILE = arm-none-linux-gnueabi
+endif
+
+# Tools
+CC             = $(CROSS_COMPILE)-gcc
+AR             = $(CROSS_COMPILE)-ar
+RM             = rm -rf
+MKDIR          = mkdir
+
+COBJS       = 	$(BUILDPATH)/fha_binburn.o $(BUILDPATH)/fha_dataget.o
+                
+ifdef SUPPORT_NAND
+COBJS       += 	$(BUILDPATH)/nandbinburn.o $(BUILDPATH)/nanddataget.o $(BUILDPATH)/nanddriver.o \
+                $(BUILDPATH)/fha_asa.o  $(BUILDPATH)/fha_asa_format.o 
+endif
+
+ifdef SUPPORT_SD
+COBJS       += 	$(BUILDPATH)/sdburn.o
+endif
+
+ifdef SUPPORT_SPIFLASH
+COBJS       += 	$(BUILDPATH)/spiburn.o 
+endif
+theLibFile     = $(ALL)
+
+#build rule
+.PHONY: clean makedirs maketarget debug
+
+debug:
+	$(MAKE) makedirs  BUILDPATH=$(BUILDPATH)
+	$(MAKE) maketarget  BUILDPATH=$(BUILDPATH)
+
+makedirs: $(BUILDPATH) 
+
+maketarget: $(theLibFile)
+
+clean :
+	-@$(RM) $(BUILDPATH)
+	-@$(RM) $(theLibFile)
+
+#tar:
+#	/bin/tar cvfz fatfs_lib_SRC_$(TD).tar.z source include base mmst_api.h wapt_api.h fatfslib.dsp Makefile
+
+$(BUILDPATH):
+	-@$(MKDIR) -p $@
+
+$(theLibFile): $(COBJS)
+	@echo ---------------------[$@]---------------------
+	$(AR) -rsv $(theLibFile) $(COBJS)
+
+vpath %.c source
+
+#Rules ----------------------------- c -> d
+$(BUILDPATH)/%.o: %.c
+	@echo ---------------------[$<]---------------------
+	$(CC) -c $(CFLAGS)  -o $@ $<
+

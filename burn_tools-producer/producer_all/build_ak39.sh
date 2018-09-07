@@ -1,0 +1,2 @@
+make clean
+make PLATFORM=CONFIG_AK39XX

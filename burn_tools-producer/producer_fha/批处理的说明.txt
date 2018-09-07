@@ -1,0 +1,3 @@
+GCC的是linux应用
+spot11的是11平台应用，原因是需要编译特定的asa，他的producer是编译正常ads
+可以看批处理中需要支持哪些medium，可以自由组合

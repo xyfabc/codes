@@ -1,0 +1,11 @@
+prefix=/home/eric/Works/zmq/hisi/libuuid-1.0.3/_install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: uuid
+Description: Universally unique id library
+Version: 1.0.3
+Requires:
+Cflags: -I${includedir}/uuid
+Libs: -L${libdir} -luuid

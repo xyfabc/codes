@@ -1,0 +1,23 @@
+QMAKE_CXX.INCDIRS = \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/arm-hisiv400-linux-gnueabi/include/c++/4.8.3 \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/arm-hisiv400-linux-gnueabi/include/c++/4.8.3/arm-hisiv400-linux-gnueabi \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/arm-hisiv400-linux-gnueabi/include/c++/4.8.3/backward \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/lib/gcc/arm-hisiv400-linux-gnueabi/4.8.3/include \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/lib/gcc/arm-hisiv400-linux-gnueabi/4.8.3/include-fixed \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/arm-hisiv400-linux-gnueabi/include \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/target/usr/include
+QMAKE_CXX.LIBDIRS = \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/lib/gcc/arm-hisiv400-linux-gnueabi/4.8.3 \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/lib/gcc \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/arm-hisiv400-linux-gnueabi/lib \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/target/lib \
+    /opt/hisi-linux/x86-arm/arm-hisiv400-linux/target/usr/lib
+QMAKE_CXX.QT_COMPILER_STDCXX = 199711L
+QMAKE_CXX.QMAKE_GCC_MAJOR_VERSION = 4
+QMAKE_CXX.QMAKE_GCC_MINOR_VERSION = 8
+QMAKE_CXX.QMAKE_GCC_PATCH_VERSION = 3
+QMAKE_CXX.COMPILER_MACROS = \
+    QT_COMPILER_STDCXX \
+    QMAKE_GCC_MAJOR_VERSION \
+    QMAKE_GCC_MINOR_VERSION \
+    QMAKE_GCC_PATCH_VERSION
